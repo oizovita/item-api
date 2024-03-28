@@ -1,0 +1,51 @@
+{
+  "item_index": {
+    "path": "/api/v2/items",
+    "method": "GET",
+    "controller": "ItemController",
+    "action": "index"
+  },
+  "item_show": {
+    "path": "/api/v2/items/([0-9]*)",
+    "method": "GET",
+    "controller": "ItemController",
+    "action": "show"
+  },
+  "item_create": {
+    "path": "/api/v2/items",
+    "method": "POST",
+    "controller": "ItemController",
+    "action": "create"
+  },
+  "item_update": {
+    "path": "/api/v2/items/([0-9]*)",
+    "method": "PUT",
+    "controller": "ItemController",
+    "action": "update"
+  },
+  "item_destroy": {
+    "path": "/api/v2/items/([0-9]*)",
+    "method": "DELETE",
+    "controller": "ItemController",
+    "action": "delete"
+  },
+  "register": {
+    "path": "/api/v2/register",
+    "method": "POST",
+    "controller": "AuthController",
+    "action": "register"
+  },
+  "login": {
+    "path": "/api/v2/login",
+    "method": "POST",
+    "controller": "AuthController",
+    "action": "login"
+  },
+  "logout": {
+    "path": "/api/v2/logout",
+    "method": "POST",
+    "controller": "AuthController",
+    "action": "logout"
+  }
+}
+

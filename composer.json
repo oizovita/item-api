@@ -1,0 +1,19 @@
+{
+    "name": "oizovita/item-api",
+    "authors": [
+        {
+            "name": "oizovita",
+            "email": "oizovita@yahoo.com"
+        }
+    ],
+    "require": {
+      "ext-json": "*",
+      "ext-pdo": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Core\\": "core/",
+            "Src\\": "src/"
+        }
+    }
+}
