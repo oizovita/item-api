@@ -15,10 +15,11 @@ class UserRepository implements UserRepositoryInterface
 
     public function __construct()
     {
+        $auth_config = Config::get('auth');
         static::$DATA[] = [
             'id' => 1,
-            'email' => Config::get('email'),
-            'password' =>  Config::get('password'),
+            'email' => $auth_config['email'],
+            'password' =>  $auth_config['password'],
         ];
     }
 

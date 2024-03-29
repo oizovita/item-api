@@ -5,7 +5,6 @@ namespace Src\Controllers;
 use Core\Request;
 use Core\JsonResponse;
 use Src\Contracts\UserRepositoryInterface;
-use Exception;
 
 /**
  * Class AuthController
@@ -26,8 +25,8 @@ class AuthController
     }
 
     /**
+     * @param Request $request
      * @return false|string
-     * @throws Exception
      */
     public function register(Request $request): false|string
     {
