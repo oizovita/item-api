@@ -43,20 +43,21 @@ final class App
     public function handle(Router $router): string
     {
         try {
+
             $result = $router->mapRequest();
             $controller = $this->createController($result['controller']);
             $action = $result['action'];
-            $params = $result['params'] ?? null;
+            $request = new Request($result['params'] ?? []);
 
             if (in_array('auth', $result['middlewares'])) {
                 $middleware = new BasicAuthMiddleware($this->container->get(UserRepositoryInterface::class));
-                $middleware->handle(function () use ($controller, $action, $result, $params) {
-                    return $this->callAction($controller, $action, $params);
+                $middleware->handle($request, function () use ($controller, $action, $result, $request) {
+                    return $this->callAction($controller, $action, $request);
                 });
             }
 
 
-            return $this->callAction($controller, $action, $params);
+            return $this->callAction($controller, $action, $request);
 
         } catch (Exception $exception) {
             return JsonResponse::toJson(['Error' => $exception->getMessage()], $exception->getCode());
@@ -83,12 +84,8 @@ final class App
         return new $controller(...$dependencies);
     }
 
-    private function callAction($controller, $action, $params = null)
+    private function callAction($controller, $action, Request $request)
     {
-        if (isset($params)) {
-            return $controller->$action(new Request($params));
-        }
-
-        return $controller->$action();
+        return $controller->$action($request);
     }
 }

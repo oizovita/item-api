@@ -2,6 +2,7 @@
 
 namespace Src\Middleware;
 
+use Core\Request;
 use Exception;
 use Src\Contracts\UserRepositoryInterface;
 
@@ -17,15 +18,15 @@ class BasicAuthMiddleware
     /**
      * @throws Exception
      */
-    public function handle($next)
+    public function handle(Request $request, $next)
     {
-        if (!isset($_SERVER['PHP_AUTH_USER'])) {
+        if ($request->getAuthUser() == null) {
             header('WWW-Authenticate: Basic realm="My Website"');
             header('HTTP/1.0 401 Unauthorized');
             throw new Exception('Access denied', 401);
         } else {
             $user = $this->userRepository->findByEmail($_SERVER['PHP_AUTH_USER']);
-            if ($user->getPassword() !== md5($_SERVER['PHP_AUTH_PW'])) {
+            if ($user->getPassword() !== md5($request->getAuthPw())) {
                 throw new Exception('Access denied', 401);
             }
         }

@@ -1,6 +1,6 @@
 # Item API
 
-This is a simple API built with PHP that allows users to manage items. The API provides endpoints for creating, retrieving, updating, and deleting items.
+This is a simple API built with PHP that allows users to manage items.
 
 ## Table of Contents
 
