@@ -2,18 +2,19 @@
 
 namespace Src\Repositories;
 
-use Core\Repository;
+use Exception;
 use Src\Contracts\ItemRepositoryInterface;
 use Src\Entities\Item;
 
-class ItemRepository extends Repository implements ItemRepositoryInterface
+class ItemRepository implements ItemRepositoryInterface
 {
-    private static array $DATA = [];
-
-    public function __construct()
-    {
-        $this->load();
-    }
+    private static array $DATA = [
+        ['id' => 1, 'name' => 'Item 1'],
+        ['id' => 2, 'name' => 'Item 2'],
+        ['id' => 3, 'name' => 'Item 3'],
+        ['id' => 4, 'name' => 'Item 4'],
+        ['id' => 5, 'name' => 'Item 5'],
+    ];
 
     /**
      * @return array
@@ -27,24 +28,17 @@ class ItemRepository extends Repository implements ItemRepositoryInterface
 
     /**
      * @param int $id
-     * @return array|mixed
+     * @return Item
+     * @throws Exception
      */
-    public function findById(int $id)
+    public function find(int $id): Item
     {
         foreach (self::$DATA as $post) {
-            if ($post->id === $id) {
+            if ($post['id'] === $id) {
                 return Item::fromArray((array)$post);;
             }
         }
-        return [];
-    }
 
-    /**
-     * Load data from db.json
-     */
-    private function load(): void
-    {
-        $DB_PATH = __DIR__ . '/../../db.json';
-        self::$DATA = json_decode(file_get_contents($DB_PATH));
+        throw new Exception('Item not found', 404);
     }
 }

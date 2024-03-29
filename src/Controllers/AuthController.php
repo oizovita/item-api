@@ -2,7 +2,9 @@
 
 namespace Src\Controllers;
 
-use Src\Models\User;
+use Core\Request;
+use Core\JsonResponse;
+use Src\Contracts\UserRepositoryInterface;
 use Exception;
 
 /**
@@ -11,63 +13,32 @@ use Exception;
 class AuthController
 {
     /**
-     * @var User
+     * @var UserRepositoryInterface
      */
-    private User $user;
+    private UserRepositoryInterface $userRepository;
 
     /**
      * ItemController constructor.
      */
-    public function __construct()
+    public function __construct(UserRepositoryInterface $userRepository)
     {
-        $this->user = new User();
+        $this->userRepository = $userRepository;
     }
 
     /**
      * @return false|string
      * @throws Exception
      */
-    public function register()
+    public function register(Request $request): false|string
     {
-        $data = json_decode(file_get_contents('php://input'), true);
-        if (!empty($this->user->where(['login' => $data['login']]))) {
-            http_response_code(422);
-            return json_encode(['Error' => 'Login must be unique', 'status' => 422]);
+        $data = $request->getJSON();
+        if (!empty($this->userRepository->findByEmail($data['login']))) {
+            return JsonResponse::toJson(['Error' => 'Login must be unique', 'status' => 422]);
         }
-        $data['pass'] = md5($data['pass']);
-        $this->user->create($data);
+        $data['password'] = md5($data['password']);
+        $user = $this->userRepository->create($data);
 
-        return json_encode(['status' => 201]);
-    }
+        return JsonResponse::toJson($user->toArray(), 201);
 
-    /**
-     * @return false|string
-     * @throws Exception
-     */
-    public function login()
-    {
-        $data = json_decode(file_get_contents('php://input'), true);
-        $user = $this->user->where(['login' => $data['login'], 'pass' => md5($data['pass'])]);
-        if (empty($user)) {
-            http_response_code(422);
-            return json_encode(['Error' => 'Login not found', 'status' => 422]);
-        }
-
-        session_start();
-
-        return json_encode(['status' => 200]);
-    }
-
-    /**
-     *
-     */
-    public function logout()
-    {
-        session_start();
-        setcookie("PHPSESSID", "", time(), "/", "." . '192.168.20.20');
-        session_destroy();
-        unset($_COOKIE["PHPSESSID"]);
-
-        return json_encode(['status' => 200]);
     }
 }

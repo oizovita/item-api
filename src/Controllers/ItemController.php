@@ -2,10 +2,8 @@
 
 namespace Src\Controllers;
 
-use Core\App;
-use Core\Repository;
 use Core\Request;
-use Core\Response;
+use Core\JsonResponse;
 use Exception;
 use Src\Contracts\ItemRepositoryInterface;
 use Src\Repositories\ItemRepository;
@@ -23,31 +21,31 @@ class ItemController
     /**
      * ItemController constructor.
      */
-    public function __construct()
+    public function __construct(ItemRepositoryInterface $itemRepository)
     {
-        $this->itemRepository = App::getInstance()->getContainer()->get(ItemRepositoryInterface::class);
+        $this->itemRepository = $itemRepository;
     }
 
     /**
      * Get all items
      *
-     * @return false|string
+     * @return string
      * @throws Exception
      */
-    public function index(): false|string
+    public function index(): string
     {
-        return Response::toJson(['data' => $this->itemRepository->all()]);
+        return JsonResponse::toJson(['data' => $this->itemRepository->all()]);
     }
 
     /**
      * Get one item by id
      *
-     * @param $id
-     * @return false|string
+     * @param Request $request
+     * @return string
      * @throws Exception
      */
-    public function show(Request $request): false|string
+    public function show(Request $request): string
     {
-        return Response::toJson($this->itemRepository->findById($request->getParam())->toArray());
+        return JsonResponse::toJson($this->itemRepository->find($request->getParam())->toArray());
     }
 }

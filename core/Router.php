@@ -46,6 +46,7 @@ class Router
                     array_shift($matches);
                     $result['controller'] = $route['controller'];
                     $result['action'] = $route['action'];
+                    $result['middlewares'] = $route['middlewares'] ?? [];
                     if (!empty($matches)) {
                         $result['params'] = array_shift($matches);
                     }

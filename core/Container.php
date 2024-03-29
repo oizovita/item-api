@@ -2,80 +2,34 @@
 
 namespace Core;
 
+use Exception;
+
 class Container
 {
-    protected array $instances = [];
-
-    public function set(string $abstract, $concrete = null)
-    {
-        if ($concrete === null) {
-            $concrete = $abstract;
-        }
-
-        $this->instances[$abstract] = $concrete;
-    }
+    private $dependencies = [];
 
     /**
-     * @throws \Exception
+     * Register a new dependency
+     * @param $name
+     * @param $resolver
      */
-    public function get(string $abstract)
+    public function register($name, $resolver): void
     {
-        if (!isset($this->instances[$abstract])) {
-            $this->set($abstract);
-        }
-
-        return $this->resolve($this->instances[$abstract]);
+        $this->dependencies[$name] = $resolver;
     }
 
-    /**
-     * @throws \ReflectionException
-     * @throws \Exception
-     */
-    protected function resolve($concrete)
-    {
-        if ($concrete instanceof \Closure) {
-            return $concrete($this);
-        }
-
-        $reflector = new \ReflectionClass($concrete);
-
-        if (!$reflector->isInstantiable()) {
-            throw new \Exception("Class {$concrete} is not instantiable");
-        }
-
-        $constructor = $reflector->getConstructor();
-
-        if (is_null($constructor)) {
-            return $reflector->newInstance();
-        }
-
-        $parameters = $constructor->getParameters();
-        $dependencies = $this->getDependencies($parameters);
-
-        return $reflector->newInstanceArgs($dependencies);
-    }
 
     /**
-     * @throws \Exception
+     * Get an instance of the dependency
+     * @throws Exception
      */
-    protected function getDependencies($parameters): array
+    public function get($name)
     {
-        $dependencies = [];
-
-        foreach ($parameters as $parameter) {
-            $dependency = $parameter->getClass();
-
-            if ($dependency === null) {
-                if ($parameter->isDefaultValueAvailable()) {
-                    $dependencies[] = $parameter->getDefaultValue();
-                } else {
-                    throw new \Exception("Cannot resolve class dependency {$parameter->name}");
-                }
-            } else {
-                $dependencies[] = $this->get($dependency->name);
-            }
+        if (isset($this->dependencies[$name])) {
+            $resolver = $this->dependencies[$name];
+            return $resolver($this);
         }
 
-        return $dependencies;
+        throw new Exception("Dependency '$name' not found.");
     }
 }

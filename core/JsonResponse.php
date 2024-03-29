@@ -2,8 +2,10 @@
 
 namespace Core;
 
-class Response
+class JsonResponse
 {
+
+
     /**
      * @param array $data
      * @param int $status
