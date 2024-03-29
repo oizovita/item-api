@@ -6,28 +6,32 @@ use Exception;
 
 /**
  * Class Router
+ *
+ * The Router class is responsible for mapping incoming HTTP requests to the appropriate route.
+ * It provides a method to map the request and return the corresponding controller, action, and parameters.
  */
 class Router
 {
     /**
-     * @var mixed
+     * @var mixed The routes defined in the application.
      */
     private mixed $routes;
 
     /**
      * Router constructor.
-     * @param $file
+     *
+     * @param string $file The file containing the route definitions.
      */
-    public function __construct($file)
+    public function __construct(string $file)
     {
         $this->routes = json_decode($file, true);
     }
 
     /**
-     * Map request with route
+     * Maps the incoming request to the appropriate route.
      *
-     * @return array
-     * @throws Exception
+     * @return array The controller, action, and parameters for the route.
+     * @throws Exception If the route is not found or the method is not allowed.
      */
     public function mapRequest(): array
     {
@@ -57,12 +61,12 @@ class Router
 
         if ($routeNotFound) {
             header("HTTP/1.0 404 Not Found");
-            throw new Exception('Not Found');
+            throw new Exception('Not Found', Response::HTTP_NOT_FOUND);
         }
 
         if ($methodNotAllowed) {
             header("HTTP/1.0 405 Method Not Allowed");
-            throw new Exception('Method Not Allowed');
+            throw new Exception('Method Not Allowed', Response::HTTP_METHOD_NOT_ALLOWED);
         }
 
         return $result;

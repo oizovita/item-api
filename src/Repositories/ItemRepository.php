@@ -5,6 +5,9 @@ namespace Src\Repositories;
 use Src\Contracts\ItemRepositoryInterface;
 use Src\Entities\Item;
 
+/**
+ * Class ItemRepository
+ */
 class ItemRepository implements ItemRepositoryInterface
 {
     private static array $DATA = [
@@ -16,7 +19,9 @@ class ItemRepository implements ItemRepositoryInterface
     ];
 
     /**
-     * @return array
+     * Get all items.
+     *
+     * @return array An array of items.
      */
     public function all(): array
     {
@@ -26,8 +31,10 @@ class ItemRepository implements ItemRepositoryInterface
     }
 
     /**
-     * @param int $id
-     * @return Item|null
+     * Find an item by its ID.
+     *
+     * @param int $id The ID of the item.
+     * @return Item|null The item if found, null otherwise.
      */
     public function find(int $id): ?Item
     {

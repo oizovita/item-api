@@ -2,8 +2,9 @@
 
 namespace Src\Controllers;
 
+use Core\Controller;
 use Core\Request;
-use Core\JsonResponse;
+use Core\Response;
 use Exception;
 use Src\Contracts\ItemRepositoryInterface;
 use Src\Repositories\ItemRepository;
@@ -11,15 +12,17 @@ use Src\Repositories\ItemRepository;
 /**
  * Class ItemController
  */
-class ItemController
+class ItemController extends Controller
 {
     /**
-     * @var itemRepository
+     * @var ItemRepositoryInterface The repository to access items.
      */
     private ItemRepositoryInterface $itemRepository;
 
     /**
      * ItemController constructor.
+     *
+     * @param ItemRepositoryInterface $itemRepository The repository to access items.
      */
     public function __construct(ItemRepositoryInterface $itemRepository)
     {
@@ -27,25 +30,29 @@ class ItemController
     }
 
     /**
-     * Get all items
+     * Get all items.
      *
-     * @return string
-     * @throws Exception
+     * @return string A JSON string containing all items.
      */
     public function index(): string
     {
-        return JsonResponse::toJson(['data' => $this->itemRepository->all()]);
+        return Response::toJson(['data' => $this->itemRepository->all()]);
     }
 
     /**
-     * Get one item by id
+     * Get one item by id.
      *
-     * @param Request $request
-     * @return string
-     * @throws Exception
+     * @param Request $request The HTTP request.
+     * @return string A JSON string containing the item.
+     * @throws Exception If the item is not found.
      */
     public function show(Request $request): string
     {
-        return JsonResponse::toJson($this->itemRepository->find($request->getParam())->toArray());
+        $item = $this->itemRepository->find($request->getParam());
+        if (!$item) {
+            throw new Exception('Item not found', Response::HTTP_NOT_FOUND);
+        }
+
+        return Response::toJson($item->toArray());
     }
 }

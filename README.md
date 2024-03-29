@@ -5,15 +5,16 @@ This is a simple API built with PHP that allows users to manage items.
 ## Table of Contents
 
 - [Getting Started](#getting-started)
-   - [Prerequisites](#prerequisites)
-   - [Installation](#installation)
-   - [Docker Installation](#docker-installation)
+    - [Prerequisites](#prerequisites)
+    - [Installation](#installation)
+    - [Docker Installation](#docker-installation)
 - [Usage](#usage)
 - [Authentication](#authentication)
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+These instructions will get you a copy of the project up and running on your local machine for development and testing
+purposes.
 
 ### Prerequisites
 
@@ -46,7 +47,8 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Docker Installation
 
-If you have Docker installed, you can use it to run the application without having to install PHP and Composer on your local machine.
+If you have Docker installed, you can use it to run the application without having to install PHP and Composer on your
+local machine.
 
 1. Build the Docker image:
     ```
@@ -60,14 +62,15 @@ If you have Docker installed, you can use it to run the application without havi
 
 3. Open your browser and navigate to `http://localhost:8000`.
 
-Please note that the Dockerfile included in this project is set up to expose port 8000, so make sure that port is available on your machine.
+Please note that the Dockerfile included in this project is set up to expose port 8000, so make sure that port is
+available on your machine.
 
 ## Usage
 
 The API provides the following endpoints:
 
-- `GET /items`: Retrieve all items.
-- `GET /items/{id}`: Retrieve a single item by its ID.
+- `GET api/v1/items`: Retrieve all items.
+- `GET api/v1/items/{id}`: Retrieve a single item by its ID.
 
 ## Authentication
 

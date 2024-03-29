@@ -7,12 +7,18 @@ use Exception;
 use Src\Contracts\UserRepositoryInterface;
 use Src\Entities\User;
 
+/**
+ * Class UserRepository
+ */
 class UserRepository implements UserRepositoryInterface
 {
 
     private static array $DATA = [
     ];
 
+    /**
+     * UserRepository constructor.
+     */
     public function __construct()
     {
         $auth_config = Config::get('auth');
@@ -24,7 +30,9 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @return array
+     * Get all users.
+     *
+     * @return array An array of users.
      */
     public function all(): array
     {
@@ -34,6 +42,12 @@ class UserRepository implements UserRepositoryInterface
     }
 
 
+    /**
+     * Find a user by its ID.
+     *
+     * @param int $id The ID of the user.
+     * @return User|null The user if found, null otherwise.
+     */
     public function find(int $id): ?User
     {
         $data = array_filter(self::$DATA, function ($users) use ($id) {
@@ -46,7 +60,10 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @throws Exception
+     * Find a user by email.
+     *
+     * @param string $email The email of the user.
+     * @return User|null The user if found, null otherwise.
      */
     public function findByEmail(string $email): ?User
     {
@@ -57,6 +74,5 @@ class UserRepository implements UserRepositoryInterface
         if (empty($data)) return null;
 
         return User::fromArray($data);
-
     }
 }

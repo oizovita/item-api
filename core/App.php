@@ -10,17 +10,39 @@ use Src\Middleware\BasicAuthMiddleware;
 use Src\Repositories\ItemRepository;
 use Src\Repositories\UserRepository;
 
+/**
+ * Class App
+ *
+ * The main application class that handles the request and response.
+ * It also manages the dependency injection container.
+ */
 final class App
 {
+    /**
+     * @var App|null The singleton instance of the App class.
+     */
     private static ?App $instance = null;
+
+    /**
+     * @var Container The dependency injection container.
+     */
     private Container $container;
 
+    /**
+     * App constructor.
+     *
+     * Private to prevent creating multiple instances.
+     */
     private function __construct()
     {
         $this->container = new Container();
         $this->registerDependencies();
     }
 
+
+    /**
+     * Registers the dependencies in the container.
+     */
     private function registerDependencies(): void
     {
         $this->container->register(ItemRepositoryInterface::class, function () {
@@ -31,6 +53,11 @@ final class App
         });
     }
 
+    /**
+     * Returns the singleton instance of the App class.
+     *
+     * @return App The singleton instance.
+     */
     public static function getInstance(): App
     {
         if (static::$instance === null) {
@@ -40,6 +67,12 @@ final class App
         return static::$instance;
     }
 
+    /**
+     * Handles the incoming request and returns the response.
+     *
+     * @param Router $router The router instance.
+     * @return string The response.
+     */
     public function handle(Router $router): string
     {
         try {
@@ -60,12 +93,16 @@ final class App
             return $this->callAction($controller, $action, $request);
 
         } catch (Exception $exception) {
-            return JsonResponse::toJson(['Error' => $exception->getMessage()], $exception->getCode());
+            return Response::toJson(['Error' => $exception->getMessage()], $exception->getCode());
         }
     }
 
     /**
-     * @throws \ReflectionException
+     * Creates a controller instance with its dependencies.
+     *
+     * @param string $controllerName The name of the controller.
+     * @return object The controller instance.
+     * @throws \ReflectionException If the class does not exist.
      */
     private function createController(string $controllerName): object
     {
@@ -84,7 +121,15 @@ final class App
         return new $controller(...$dependencies);
     }
 
-    private function callAction($controller, $action, Request $request)
+    /**
+     * Calls the action method on the controller with the request.
+     *
+     * @param Controller $controller The controller instance.
+     * @param string $action The action method name.
+     * @param Request $request The request instance.
+     * @return mixed The result of the action method.
+     */
+    private function callAction(Controller $controller, string $action, Request $request): mixed
     {
         return $controller->$action($request);
     }
