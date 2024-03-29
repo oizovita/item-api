@@ -8,5 +8,5 @@ interface ItemRepositoryInterface
 {
     public function all(): array;
 
-    public function find(int $id): Item;
+    public function find(int $id): ?Item;
 }

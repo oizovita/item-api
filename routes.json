@@ -16,12 +16,6 @@
     "middlewares": [
       "auth"
     ]
-  },
-  "register": {
-    "path": "/api/v1/register",
-    "method": "POST",
-    "controller": "AuthController",
-    "action": "register"
   }
 }
 

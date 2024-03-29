@@ -48,7 +48,6 @@ class User
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
             'email' => $this->email
         ];
     }

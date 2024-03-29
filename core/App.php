@@ -47,7 +47,7 @@ final class App
             $result = $router->mapRequest();
             $controller = $this->createController($result['controller']);
             $action = $result['action'];
-            $request = new Request($result['params'] ?? []);
+            $request = new Request($result['params'] ?? null);
 
             if (in_array('auth', $result['middlewares'])) {
                 $middleware = new BasicAuthMiddleware($this->container->get(UserRepositoryInterface::class));

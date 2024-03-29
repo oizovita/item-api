@@ -2,7 +2,6 @@
 
 namespace Src\Repositories;
 
-use Exception;
 use Src\Contracts\ItemRepositoryInterface;
 use Src\Entities\Item;
 
@@ -28,17 +27,17 @@ class ItemRepository implements ItemRepositoryInterface
 
     /**
      * @param int $id
-     * @return Item
-     * @throws Exception
+     * @return Item|null
      */
-    public function find(int $id): Item
+    public function find(int $id): ?Item
     {
-        foreach (self::$DATA as $post) {
-            if ($post['id'] === $id) {
-                return Item::fromArray((array)$post);;
-            }
-        }
 
-        throw new Exception('Item not found', 404);
+        $data = array_filter(self::$DATA, function ($items) use ($id) {
+            return $items['id'] === $id;
+        });
+
+        if (empty($data)) return null;
+
+        return Item::fromArray($data);
     }
 }

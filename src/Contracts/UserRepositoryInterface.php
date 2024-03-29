@@ -8,9 +8,7 @@ interface UserRepositoryInterface
 {
     public function all(): array;
 
-    public function find(int $id): User;
+    public function find(int $id): ?User;
 
-    public function findByEmail(string $email): User;
-
-    public function create(array $data): User;
+    public function findByEmail(string $email): ?User;
 }

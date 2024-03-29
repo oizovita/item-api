@@ -21,7 +21,7 @@ class BasicAuthMiddleware
     public function handle(Request $request, $next)
     {
         if ($request->getAuthUser() == null) {
-            header('WWW-Authenticate: Basic realm="My Website"');
+            header('WWW-Authenticate: Basic realm="Item API"');
             header('HTTP/1.0 401 Unauthorized');
             throw new Exception('Access denied', 401);
         } else {

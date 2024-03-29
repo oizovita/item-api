@@ -19,7 +19,7 @@ class UserRepository implements UserRepositoryInterface
         static::$DATA[] = [
             'id' => 1,
             'email' => $auth_config['email'],
-            'password' =>  $auth_config['password'],
+            'password' => $auth_config['password'],
         ];
     }
 
@@ -33,39 +33,30 @@ class UserRepository implements UserRepositoryInterface
         }, self::$DATA);
     }
 
-    /**
-     * @throws Exception
-     */
-    public function find(int $id): User
+
+    public function find(int $id): ?User
     {
-        foreach (self::$DATA as $post) {
-            if ($post['id'] === $id) {
-                return User::fromArray((array)$post);;
-            }
-        }
+        $data = array_filter(self::$DATA, function ($users) use ($id) {
+            return $users['id'] === $id;
+        });
 
-        throw new Exception('Item not found', 404);
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function findByEmail(string $email): User
-    {
-        foreach (self::$DATA as $post) {
-            if ($post['email'] === $email) {
-                return User::fromArray((array)$post);;
-            }
-        }
-
-        throw new Exception('User not found', 404);
-    }
-
-    public function create(array $data): User
-    {
-        $data['id'] = count(self::$DATA) + 1;
-        self::$DATA[] = $data;
+        if (empty($data)) return null;
 
         return User::fromArray($data);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function findByEmail(string $email): ?User
+    {
+        $data = array_filter(self::$DATA, function ($users) use ($email) {
+            return $users['email'] === $email;
+        });
+
+        if (empty($data)) return null;
+
+        return User::fromArray($data);
+
     }
 }
