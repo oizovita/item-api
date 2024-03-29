@@ -38,13 +38,11 @@ class ItemRepository implements ItemRepositoryInterface
      */
     public function find(int $id): ?Item
     {
-
-        $data = array_filter(self::$DATA, function ($items) use ($id) {
-            return $items['id'] === $id;
-        });
-
-        if (empty($data)) return null;
-
-        return Item::fromArray($data);
+        foreach (self::$DATA as $data) {
+            if ($data['id'] === $id) {
+                return Item::fromArray($data);
+            }
+        }
+        return null;
     }
 }

@@ -50,13 +50,12 @@ class UserRepository implements UserRepositoryInterface
      */
     public function find(int $id): ?User
     {
-        $data = array_filter(self::$DATA, function ($users) use ($id) {
-            return $users['id'] === $id;
-        });
-
-        if (empty($data)) return null;
-
-        return User::fromArray($data);
+        foreach (self::$DATA as $data) {
+            if ($data['id'] === $id) {
+                return User::fromArray($data);
+            }
+        }
+        return null;
     }
 
     /**
@@ -67,12 +66,11 @@ class UserRepository implements UserRepositoryInterface
      */
     public function findByEmail(string $email): ?User
     {
-        $data = array_filter(self::$DATA, function ($users) use ($email) {
-            return $users['email'] === $email;
-        });
-
-        if (empty($data)) return null;
-
-        return User::fromArray($data);
+        foreach (self::$DATA as $data) {
+            if ($data['email'] === $email) {
+                return User::fromArray($data);
+            }
+        }
+        return null;
     }
 }

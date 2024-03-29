@@ -40,7 +40,7 @@ class BasicAuthMiddleware
             throw new Exception('Access denied', Response::HTTP_UNAUTHORIZED);
         } else {
             $user = $this->userRepository->findByEmail($_SERVER['PHP_AUTH_USER']);
-            if ($user->getPassword() !== md5($request->getAuthPw())) {
+            if (!$user || $user->getPassword() !== md5($request->getAuthPw())) {
                 throw new Exception('Access denied', Response::HTTP_UNAUTHORIZED);
             }
         }
