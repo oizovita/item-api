@@ -32,27 +32,27 @@ class ItemController extends Controller
     /**
      * Get all items.
      *
-     * @return string A JSON string containing all items.
+     * @return Response A JSON string containing all items.
      */
-    public function index(): string
+    public function index(): Response
     {
-        return Response::toJson(['data' => $this->itemRepository->all()]);
+        return new Response(['data' => $this->itemRepository->all()]);
     }
 
     /**
      * Get one item by id.
      *
      * @param Request $request The HTTP request.
-     * @return string A JSON string containing the item.
+     * @return Response A JSON string containing the item.
      * @throws Exception If the item is not found.
      */
-    public function show(Request $request): string
+    public function show(Request $request): Response
     {
         $item = $this->itemRepository->find($request->getParam());
         if (!$item) {
             throw new Exception('Item not found', Response::HTTP_NOT_FOUND);
         }
 
-        return Response::toJson($item->toArray());
+        return new Response($item->toArray());
     }
 }

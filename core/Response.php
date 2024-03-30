@@ -18,20 +18,26 @@ class Response
     const int HTTP_NOT_FOUND = 404;
     const int HTTP_METHOD_NOT_ALLOWED = 405;
 
+    private array $data;
+    private int $status;
+
+    public function __construct(array $data = [], int $status = self::HTTP_OK)
+    {
+        $this->data = $data;
+        $this->status = $status;
+    }
 
     /**
      * Converts the given data to a JSON string, sets the HTTP response code,
      * and returns the JSON string.
      *
-     * @param array $data The data to be converted to JSON.
-     * @param int $status The HTTP status code.
      * @return false|string The JSON string.
      */
-    public static function toJson(array $data = [], int $status = self::HTTP_OK): false|string
+    public function toJson(): false|string
     {
-        http_response_code($status);
+        http_response_code($this->status);
         header('Content-Type: application/json');
 
-        return json_encode($data);
+        return json_encode($this->data);
     }
 }

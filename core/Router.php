@@ -60,12 +60,10 @@ class Router
         }
 
         if ($routeNotFound) {
-            header("HTTP/1.0 404 Not Found");
             throw new Exception('Not Found', Response::HTTP_NOT_FOUND);
         }
 
         if ($methodNotAllowed) {
-            header("HTTP/1.0 405 Method Not Allowed");
             throw new Exception('Method Not Allowed', Response::HTTP_METHOD_NOT_ALLOWED);
         }
 

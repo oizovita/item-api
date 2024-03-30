@@ -76,7 +76,6 @@ final class App
     public function handle(Router $router): string
     {
         try {
-
             $result = $router->mapRequest();
             $controller = $this->createController($result['controller']);
             $action = $result['action'];
@@ -84,27 +83,28 @@ final class App
 
             if (in_array('auth', $result['middlewares'])) {
                 $middleware = new BasicAuthMiddleware($this->container->get(UserRepositoryInterface::class));
-                $middleware->handle($request, function () use ($controller, $action, $result, $request) {
+                $response = $middleware->handle($request, function () use ($controller, $action, $result, $request) {
                     return $this->callAction($controller, $action, $request);
-                });
+                })();
+            } else {
+                $response = $this->callAction($controller, $action, $request);
             }
 
-
-            return $this->callAction($controller, $action, $request);
-
         } catch (Exception $exception) {
-            return Response::toJson(['Error' => $exception->getMessage()], $exception->getCode());
+            $response = new Response(['Error' => $exception->getMessage()], $exception->getCode());
         }
+
+        return $response->toJson();
     }
 
     /**
      * Creates a controller instance with its dependencies.
      *
      * @param string $controllerName The name of the controller.
-     * @return object The controller instance.
+     * @return Controller The controller instance.
      * @throws \ReflectionException If the class does not exist.
      */
-    private function createController(string $controllerName): object
+    private function createController(string $controllerName): Controller
     {
         $controller = "Src\\Controllers\\$controllerName";
         $reflectionClass = new ReflectionClass($controller);
@@ -127,9 +127,9 @@ final class App
      * @param Controller $controller The controller instance.
      * @param string $action The action method name.
      * @param Request $request The request instance.
-     * @return mixed The result of the action method.
+     * @return Response The result of the action method.
      */
-    private function callAction(Controller $controller, string $action, Request $request): mixed
+    private function callAction(Controller $controller, string $action, Request $request): Response
     {
         return $controller->$action($request);
     }
