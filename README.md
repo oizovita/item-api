@@ -18,7 +18,7 @@ purposes.
 
 ### Prerequisites
 
-- PHP 8.3.4 or higher
+- PHP 8 or higher
 - Composer
 
 ### Installation
